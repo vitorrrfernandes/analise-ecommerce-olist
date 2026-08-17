@@ -24,7 +24,7 @@ Transformar dados brutos de vendas em **insights acionáveis** para o negócio, 
 | Limpeza e análise | **Python (pandas)** | tratamento de nulos, conversão de tipos, feature engineering de datas |
 | Visualização exploratória | **matplotlib / seaborn** | histogramas, gráficos de barras, análise de distribuição |
 | Segmentação | **pandas** | análise **RFM** (Recência, Frequência, Valor Monetário) |
-| Dashboard executivo | **Power BI** | visões de vendas, logística e clientes |
+| Dashboard executivo | **Power BI** | 3 páginas: Vendas, Logística e Clientes (RFM) |
 
 ---
 
@@ -39,33 +39,55 @@ Transformar dados brutos de vendas em **insights acionáveis** para o negócio, 
 ### 🚚 Logística
 - **Tempo médio de entrega de 12 dias**, com distribuição de cauda longa (outliers chegam a +100 dias).
 - Estados do **Norte (RR, AP, AM) levam até 29 dias** — quase 3x mais que o Sudeste, um risco claro para a satisfação do cliente.
+- **Avaliação média de 4,16**, com forte polarização: nota 5 domina, mas nota 1 é a segunda mais frequente.
 
 ### 👥 Clientes
 - **93.358 clientes únicos**, mas apenas **~3% são recorrentes** — a operação depende fortemente de aquisição, não de retenção.
-- **Avaliações majoritariamente positivas** (nota 5 domina), mas com forte polarização (nota 1 é a segunda mais comum).
+- **Em Risco e Clientes Fiéis concentram quase metade do faturamento** (24% e 23% respectivamente) — mais que o dobro do peso dos Campeões (13%), mesmo estes tendo o maior ticket médio individual.
 
 ---
 
 ## 🎯 Segmentação RFM
 
-Os 93 mil clientes foram segmentados em 6 perfis comportamentais usando a metodologia **RFM**:
+Os 93 mil clientes foram segmentados em 6 perfis comportamentais usando a metodologia **RFM** (Recência, Frequência, Valor Monetário):
 
 | Segmento | Clientes | Recência média | Ticket médio | Ação recomendada |
 |---|---:|---:|---:|---|
-| 🏆 Campeões | 6.940 | 91 dias | **R$ 280** | Programa de fidelidade, acesso antecipado |
-| 💙 Clientes Fiéis | 26.799 | 145 dias | R$ 113 | Upsell e cross-sell |
-| 🌱 Novos Clientes | 14.983 | 91 dias | R$ 134 | Onboarding para fidelizar |
-| 📊 Potencial | 15.537 | 312 dias | R$ 170 | Nurturing e engajamento |
-| ⚠️ Em Risco | 22.276 | 394 dias | R$ 149 | **Campanha de reativação** |
-| 😴 Hibernando | 6.823 | 397 dias | R$ 41 | Última tentativa ou descarte |
+| 🏆 Campeões | 6.449 | 91 dias | **R$ 275,76** | Programa de fidelidade, acesso antecipado |
+| 💙 Clientes Fiéis | 27.336 | 145 dias | R$ 112,43 | Upsell e cross-sell |
+| 🌱 Novos Clientes | 14.984 | 91 dias | R$ 139,31 | Onboarding para fidelizar |
+| 📊 Potencial | 15.881 | 312 dias | R$ 177,77 | Nurturing e engajamento |
+| ⚠️ Em Risco | 22.230 | 394 dias | R$ 143,61 | **Campanha de reativação** |
+| 😴 Hibernando | 6.478 | 397 dias | R$ 41,15 | Última tentativa ou descarte |
 
-> **Insight de negócio:** 22 mil clientes **"Em Risco"** já gastaram em média R$ 149 e sumiram há mais de um ano. Representam a **maior oportunidade de reativação** da base — recuperar uma fração deles tem custo muito menor que adquirir novos clientes.
-
-![Segmentação RFM](outputs/rfm_segmentos.png)
+> **Insight de negócio:** os clientes **"Em Risco"** e **"Clientes Fiéis"** juntos respondem por quase metade do faturamento total, mesmo sem o maior ticket médio individual — o volume da base compensa o valor por cliente. Isso indica que reter esses dois grupos tem retorno potencialmente maior do que investir apenas em programas de elite para os "Campeões". Recuperar uma fração dos 22 mil clientes "Em Risco" custa muito menos do que adquirir novos clientes.
 
 ---
 
-## 📊 Visualizações
+## 📊 Dashboard Power BI
+
+Dashboard executivo com 3 páginas, identidade visual consistente e cores escolhidas para reforçar o significado de cada segmento (dourado para Campeões, laranja de alerta para Em Risco, cinza neutro para Hibernando).
+
+### Página 1 — Visão geral de vendas
+Faturamento, ticket médio, evolução mensal e ranking de estados.
+
+![Dashboard de vendas](powerbi/prints/vendas.png)
+
+### Página 2 — Logística
+Tempo médio de entrega por estado e distribuição das avaliações dos clientes.
+
+![Dashboard de logística](powerbi/prints/logistica.png)
+
+### Página 3 — Clientes (RFM)
+Segmentação RFM, ticket médio por segmento e participação de cada segmento no faturamento total.
+
+![Dashboard RFM](powerbi/prints/rfm.png)
+
+O arquivo completo e interativo está em [`powerbi/dashboard_ecommerce_olist.pbix`](powerbi/dashboard_ecommerce_olist.pbix).
+
+---
+
+## 📊 Visualizações exploratórias (Python)
 
 <table>
   <tr>
@@ -84,6 +106,12 @@ Os 93 mil clientes foram segmentados em 6 perfis comportamentais usando a metodo
     <td align="center">Distribuição do tempo de entrega</td>
     <td align="center">Distribuição das avaliações</td>
   </tr>
+  <tr>
+    <td colspan="2" align="center"><img src="outputs/rfm_segmentos.png" width="500"/></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center">Segmentação RFM de clientes</td>
+  </tr>
 </table>
 
 ---
@@ -93,20 +121,23 @@ Os 93 mil clientes foram segmentados em 6 perfis comportamentais usando a metodo
 ```
 analiseEcommerce/
 │
-├── data/                    # Dataset Olist (CSVs) + banco SQLite
+├── data/                              # Dataset Olist (CSVs) + banco SQLite
 │   └── olist.db
 │
 ├── sql/
-│   └── queries.sql          # 9 queries analíticas comentadas
+│   └── queries.sql                    # 9 queries analíticas comentadas
 │
 ├── notebooks/
-│   ├── 01_setup.ipynb       # Carga dos CSVs para o banco SQLite
-│   ├── 02_eda.ipynb         # Limpeza e análise exploratória
-│   └── 03_rfm.ipynb         # Segmentação RFM de clientes
+│   ├── 01_setup.ipynb                 # Carga dos CSVs para o banco SQLite
+│   ├── 02_eda.ipynb                   # Limpeza e análise exploratória
+│   └── 03_rfm.ipynb                   # Segmentação RFM de clientes
 │
-├── outputs/                 # Gráficos gerados
+├── outputs/                           # Gráficos gerados em Python
+│
 ├── powerbi/
-│   └── dashboard.pbix       # Dashboard executivo (3 páginas)
+│   ├── dashboard_ecommerce_olist.pbix # Dashboard executivo (3 páginas)
+│   ├── dados/                         # CSVs de apoio para o Power BI
+│   └── prints/                        # Screenshots das 3 páginas
 │
 ├── requirements.txt
 └── README.md
@@ -131,6 +162,8 @@ pip install -r requirements.txt
 
 # 4. Execute os notebooks em ordem (01 → 02 → 03)
 jupyter notebook
+
+# 5. Abra powerbi/dashboard_ecommerce_olist.pbix no Power BI Desktop
 ```
 
 ---
