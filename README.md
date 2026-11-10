@@ -177,7 +177,7 @@ Dados públicos disponibilizados pela [Olist no Kaggle](https://www.kaggle.com/d
 ## 👤 Autor
 
 **Vitor Fernandes**
-Estudante de Sistemas de Informação (UFG) | Aspirante a Analista de Dados
+Estudante de Sistemas de Informação (UFG)
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/vitor-fernandes-31a42336b/)
 [![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white)](https://github.com/vitorrrfernandes)
